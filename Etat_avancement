@@ -1,0 +1,31 @@
+Introduction :
+Le rapport ci-après est un compte rendu sur la présentation d’état d’avancement global du projet PFE qui porte sur « l’automatisation de la création des serveurs virtuels ».
+On va voir dans ce rapport les taches effectués, les résultats acquises et les enjeux rencontrés.
+Ce projet de fin d’études a pour objectif de terminer et d’ajouter d’autres fonctionnalités à un projet existant au sein de l’équipe IaaS (Infrastructure as a Service).
+Ce projet qui a pour but de faciliter et d’automatiser la création des serveurs virtuels dans un environnement VMware.
+Avant de commencer dans la partie conception et salir nos mains dans la pratique, il faut tout d’abord faire une documentation sur l’environnement VMware aussi que choisir un outil d’automatisation et effectuer des recherches dans ce sens.
+Résumé des recherches faites :
+Pourquoi Ansible ?
+Pour notre projet on va utiliser l’outil d’automatisation Ansible qui est un outil IaC (Infrastructure as Code) qui automatise le provisionnement, la gestion de configuration et le déploiement des applications.  
+ Ansible a plusieurs avantages :
+•	Agentless : 
+
+On n’a pas besoin d’installer d’autres logiciels ou d’ouvrir des ports de pare-feu supplémentaires sur les systèmes clients (Managed nodes) qu’on souhaite automatiser.     
+•	Simple :
+
+ Ansible utilise une syntaxe simple écrite en YAML (Yet Another Markup Language) pour écrire ses playbooks
+
+•	Procédural :
+La syntaxe YAML est interprétée et exécutée de manière procédurale, ce qui signifie que le workflow d'automatisation est exécuté dans l'ordre dans lequel il a été écrit. 
+
+•	Flexible :
+
+Ansible vous fournit des centaines de modules prêts à l'emploi pour gérer vos tâches, quel que soit l'endroit où ils sont déployés. Vous pouvez réutiliser le même playbook sur un parc de machines Red Hat, Windows, Ubuntu ou autres.
+
+
+
+ Architecture d’Ansible :
+Dans Ansible, il existe deux catégories d’ordinateurs : le nœud maître (Control node) et les nœuds esclaves (ou managed nodes). Le nœud maître est une machine sur laquelle est installé l'outil Ansible. Il doit y avoir au moins un nœud maître, bien qu'un nœud maître de sauvegarde puisse également exister.
+Ansible fonctionne en se connectant aux « managed nodes » en SSH (Secure Shell) en y poussant des programmes appelés modules. Ces modules sont définis dans un fichier YAML nommé playbook.
+Le nœud maître, se base sur un fichier d'inventaire « Hosts » qui fournit la liste des hôtes sur lesquels les modules Ansible doivent être exécutés. 
+NB :  Avant Windows Server 2019, les systèmes d’exploitation Windows utilise WinRM pour la gestion à distance des serveurs.
