@@ -1,0 +1,52 @@
+
+L'équipe système et virtualisation a pour mission l'administration,l'exploitation et la 
+maintenance du parc informatique .Elle travaille dans le but de garantir un service opérationnel en 
+
+
+L'administration système et virtualisation est un travail qui consiste à faire de l'administration,l'exploitation
+et la maintenance du parc informatique en garantissant un service opérationnel .
+Les taches courantes de l'administration système comprennent l'installation de nouveau matériel,
+la maintenance des serveurs  la gestion de comptes d'utilisateurs et la création des nouvelles machines virtuelles mais cette tache
+peut prendre beaucoup de temps à etre créer. La solution pour faciliter cette tache laborieuse est l'automatisation .
+L'automatisation consiste à utiliser des logiciels (comme Ansible,Terraform,Chef...) pour créer 
+des instructions et des processus reproductibles dans le but de réduire les interventions humaines,
+d'augmenter la productivité des équipes informatiques et de réduire le nombre d'erreurs.
+
+Notre role au sein de l'équipe AFS est de développer un outil qui permettra d'automatiser un maximum  d'opérations dans 
+le prcessus de livraison des machines virtuelles.
+
+
+Procédure d'installation de Terraform:
+>Installer le package approprié à votre OS & il se télécharge sous forme d'un zip archive
+
+
+
+
+__________________________________________________
+VMware_tools:
+>RVTools: -permet d'obtenir des infos concernants votre serveurs ESX/ESXI
+          -exporter les données dans excel 
+          -Générer des messages d'alertes
+          
+>VMware PowerCLI: 
+      cet outil est chargé
+
+
+___________________________________
+Module Ansible to upgrade VMtools:   "vmware_guest_tools_upgrade":
+>If we want to write an ansible playbook to upgrade VMware tools we can:
+        1.first check vmware tools status (task 1)
+        2.check vmwaretools version
+        3.copy the binary file from source to dest & use unarchive module (used to uncompressed the files from an archive file like zip
+          ,tar,tar.gz
+        4.the remote_src=yes : montre que le fichier archive n'est pas dans le node node controller Ansible 
+
+      ex playbook (but not completed):
+            
+     - name: Copy VMtools Binaries From source to Destination server
+       copy: src={{ src_bin_location }} dest={{dst_bin_location }}
+    
+     - name: Unarchive
+       unarchive: src={{dst_bin_location}}VMwareTools-10.0.6-3560309.tar.gz dest={{dst_bin_location}} remote_src=yes
+    
+
