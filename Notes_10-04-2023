@@ -69,6 +69,9 @@ il se peut que les vms produisent un conflit entre elles.
    -Thin : consomme uniquement l'espace dont il a besoin
    -Thick: If you create a 50 GB virtual disk, that disk would consume
            exactly 50 GB of physical disk space
->Ressource pool:    
+
+>Ressource pool: 
+________________
+
     
 
