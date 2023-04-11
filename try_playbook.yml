@@ -1,0 +1,34 @@
+---
+- name: Create a Windows Server VM from template
+  hosts: localhost
+  #We do not necessarily need to collect facts about our localhost so gather_facts=false
+  gather_facts: no
+  tasks:
+  - name: Clone from template
+    vmware_guest:
+         hostname: "{{ vcenter_ip}}"
+         username: "{{ vcenter_username }}"
+         password: "{{ vcenter_password }}"
+         #ssl is a security standard tech for establishing
+          an encrypted link btwn a server & a client
+         #next line we will turn off the ssl certifaction
+         validate_certs: no
+         #folder: dest folder,path to place datastore cluster in.the folder should include the datacenter
+         name: new_vm
+         template: nom_du_modèle
+         datacenter: "{{ datacenter_nme }}"
+         cluster: "{{ cluster_name }}"
+         #cluster :collection of datastores
+         #customization : we use it for OS customization when we clone vm from template
+         #The customization is related to vCenter version 
+         customization:
+             autologon: true 
+             hostname: {{ server }}
+             dns_servers:
+              - 192.168.1.2
+             domain: "domain_name"
+             joindomain: "domain_name"
+             domainadmin: "admin"
+             domainadminpassword: "admin"
+             #runonce: list of cmds to run at first user logon(specific to windows customization)
+             runonce:
