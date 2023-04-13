@@ -71,7 +71,27 @@ il se peut que les vms produisent un conflit entre elles.
            exactly 50 GB of physical disk space
 
 >Ressource pool: 
-________________
+____________________________________________________________________________________________________
+______________________________________________________________
+
+-------------------VMware Certified Associate-------------------
+>>Partir résau de la virtualisation: when creating a vm we need to plug it in a network 
+            >On utilise le vSwitch pour assurer les échanges réseaux entre les VMs
+             au niveua de chaque hyperviseur.
+>>VM files & live state:
+    -Datastore: is simply any storage technology that has been prepared to house VM files
+>>vCenter :-used to manage our vsphere environement 
+           -used to manage many ESXI hosts at once
+  >Some features of vCenter : VMotion,DRS,FT,HA,DRS storage,storage vMotion...
+  >vCenter Appliance : est une VM préconfigurée et optimisée pour l'éxecution du  vCenter.
+  >Def of each feature : 
+      --vMotion: used to reduce the downtime
+      --HA :provides host failover protection
+      --migrate VMs from host to host ,or site to site 
+      --Fault Tolerance: runs an identical copy of the vm on another host  
+  >Shared Storage: is a system storage that is accessible to all esxi hosts 
+ 
+____________________________________________________________________________
 
     
 
