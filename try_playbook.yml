@@ -9,8 +9,7 @@
          hostname: "{{ vcenter_ip}}"
          username: "{{ vcenter_username }}"
          password: "{{ vcenter_password }}"
-         #ssl is a security standard tech for establishing
-          an encrypted link btwn a server & a client
+         #ssl is a security standard tech for establishing  an encrypted link btwn a server & a client
          #next line we will turn off the ssl certifaction
          validate_certs: no
          #folder: dest folder,path to place datastore cluster in.the folder should include the datacenter
@@ -30,5 +29,33 @@
              joindomain: "domain_name"
              domainadmin: "admin"
              domainadminpassword: "admin"
-             #runonce: list of cmds to run at first user logon(specific to windows customization)
+             #runonce: list of cmds to run at first user logon(specific to windows customization) et il est utilisé pour executer une tache une seule fois 
              runonce:
+             # I don't know what to add here 
+         wait_for_customization: yes 
+         hardware: 
+           memory_mb: "{{ memory_mb }}"
+           num_cpus: "{{ num_cpus }}"
+           #hotadd_cpu: ajouter cpu quand la VM est démarrée
+           hotadd_cpu: true
+           hotremove_cpu: true
+           hotadd_memory: false
+           #I added these lines
+           cpu_limit : "{{ cpu_limit_inMHz }}"
+           mem_limit: "{{ mem_limit_in_MB }}"
+         networks:
+          - name: "{{ network_name }}"
+            type: static 
+            ip: "{{ network_ip }}"
+            netmask: "{{ network_mask }}"
+            gateway: "{{ network_gateway }}"
+            domain:  "{{ domain_name }}"
+            dns_servers:
+              - 192.168.1.2
+         wait_for_ip_address: true     
+            
+           
+
+           
+         
+         
