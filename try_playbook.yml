@@ -52,6 +52,7 @@
             domain:  "{{ domain_name }}"
             dns_servers:
               - 192.168.1.2
+              #the next line means: Wait until vCenter detects an IP address for the virtual machine
          wait_for_ip_address: true     
             
            
