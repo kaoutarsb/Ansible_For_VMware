@@ -3,6 +3,9 @@
   hosts: localhost
   #We do not necessarily need to collect facts about our localhost so gather_facts=false
   gather_facts: no
+  #Next line include the file that contains the variables:
+  pre_tasks:
+   - include_vars: vars.yml
   tasks:
   - name: Clone from template
     vmware_guest:
