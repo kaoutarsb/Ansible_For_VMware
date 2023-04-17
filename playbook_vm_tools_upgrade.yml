@@ -1,0 +1,27 @@
+---
+- name: Upgrade VM_tools
+  hosts: localhost
+  gather_facts: no 
+  #vars_file contains all the vars (hostname,username,password,datacenter.....)
+  vars_file: vars.yml
+  tasks:
+  - name: Gather VMware tools info of a VM
+    vmware_guest_tools_info:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      datacenter: "{{ datacenter_name }}"
+      name: "{{ vm_name }}"
+    delegate_to: localhost
+    #we register the info on the variable vmtools_info
+    register: vmtools_info
+  
+  #2nd task: to upgrade vmtools for any vm linux or windows
+  - name: Upgrade vm_tools
+    vmware_guest_tools_upgrade:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      datacenter: "{{ datacenter_name }}"
+      name: "{{ vm_name }}"
+    delegate_to: localhost
