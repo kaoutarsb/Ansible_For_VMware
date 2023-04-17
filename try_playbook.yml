@@ -5,8 +5,12 @@
   gather_facts: no
   #Next line include the file that contains the variables:
   pre_tasks:
+     #vars.yml : file that includes all variables like vcenter_ip,vcenter_username
    - include_vars: vars.yml
   tasks:
+  
+   #----------------Task1---------------------
+    
   - name: Clone from template
     vmware_guest:
          hostname: "{{ vcenter_ip}}"
@@ -25,7 +29,8 @@
          #The customization is related to vCenter version 
          customization:
              autologon: true 
-             hostname: {{ server }}
+             #VM name
+             hostname: "{{ server }}"
              dns_servers:
               - 192.168.1.2
              domain: "domain_name"
@@ -56,7 +61,36 @@
             dns_servers:
               - 192.168.1.2
               #the next line means: Wait until vCenter detects an IP address for the virtual machine
-         wait_for_ip_address: true     
+         wait_for_ip_address: true 
+         
+   #----------------Task2---------------------    
+  - name: Add new disk for the VM
+    vmware_guest_disk: 
+    #First we need to establish the connection with the VMware vCenter (hostname,user,psswd,validate_certs)
+       hostname: "{{ vcenter_ip}}"
+       username: "{{ vcenter_username }}"
+       password: "{{ vcenter_password }}"
+       datacenter: "{{ datacenter_nme }}"
+       validate_certs: no
+       name: "{{ server | upper}}"
+       disk: 
+        -size_gb:  "{{ disk_size }}"
+         #number of scsi bus (or scsi_controller)
+         type: "{{ vm_disk_type }}"
+         #The name of datastore which will be used for the disk
+         datastore: "{{ vm_disk_datastore }}"
+         state: present
+         scsi_controller: "{{ vm_disk_scsi_controller }}"
+         unit_number:  "{{ vm_disk_unit_number }}"
+         scsi_type: "{{ vm_disk_scsi_type }}"
+    #delegate_to : pour spécifier dans quel machine il faut executer "the task"     
+    delegate_to: localhost 
+    #Register infos of disks
+    register: disk_facts
+    
+  - name: add the VM to the Inventory file
+    
+    
             
            
 
