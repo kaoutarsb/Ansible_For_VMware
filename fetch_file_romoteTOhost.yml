@@ -1,0 +1,16 @@
+---
+- name: Fetch file from remote node to the host node 
+  hosts: all
+  gather_facts: yes
+  vars: 
+      file_to_fetch : myfile.yml
+      dest_directory: /home/kaoutarsb
+  tasks:
+  - name: task 1 to import file from the remote node
+    ansible.builtin.fetch:
+      #“src” specifies the source files in the remote hosts
+      src: "{{ file_to_fetch }}" 
+      #"dest" must be a directory
+      dest: "{{ dest_directory }}"
+      
+      
