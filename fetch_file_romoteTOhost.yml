@@ -12,5 +12,8 @@
       src: "{{ file_to_fetch }}" 
       #"dest" must be a directory
       dest: "{{ dest_directory }}"
+      #flat : Permet de modifier le comportement de nommage des fichiers sur la machine locale. Si dest est un répertoire alors le fichier locale aura (suite next line)
+      #le même nom que le fichier distant. Donc si vous l’utilisez avec plusieurs hôtes ajouter un suffixe à dest pour les différencier.
+      flat: true 
       
       
