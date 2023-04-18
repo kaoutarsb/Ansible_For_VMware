@@ -1,0 +1,10 @@
+#--------------------Playbook to read a csv file ---------------------
+- name: Read csv file
+  hosts: all
+  gather_facts: yes
+  tasks:
+   - name: read variables from csv file
+     read_csv: 
+     #The CSV filename to read data from
+     path : csv_file.csv
+     key:
