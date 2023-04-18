@@ -88,7 +88,8 @@
     #Register infos of disks
     register: disk_facts
     
-  - name: add the VM to the Inventory file
+ # - name: add the VM to the Inventory file
+ # i want to integrate excel with ansible (en utilisant les variables qui se trouve dans un 
   
     
     
