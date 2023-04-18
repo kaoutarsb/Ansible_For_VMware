@@ -89,6 +89,7 @@
     register: disk_facts
     
   - name: add the VM to the Inventory file
+  
     
     
             
