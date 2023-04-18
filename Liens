@@ -1,2 +1,3 @@
 1.  https://cahier-de-prepa.fr/taieb/download?id=40                    ------> Savoir comment rédiger rapport PFE
 2. https://ugurakgul.medium.com/provisioning-a-linux-vm-with-ansible-in-vmware-18cf45a53cb3         --->provisionning a linux VM in VMware
+3.https://galaxy.ansible.com/jtyr/ansible_vmware_vm_provisioning                                 ------->roles to provision VMs in VMware vCenter
