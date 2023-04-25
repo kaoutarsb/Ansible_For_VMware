@@ -2,3 +2,5 @@
 2. https://ugurakgul.medium.com/provisioning-a-linux-vm-with-ansible-in-vmware-18cf45a53cb3         --->provisionning a linux VM in VMware
 3.https://galaxy.ansible.com/jtyr/ansible_vmware_vm_provisioning                                 ------->roles to provision VMs in VMware vCenter
 4.https://galaxy.ansible.com/dkraklan/terraform_vmware_vm                -----------role using terraform with ansible
+
+5.https://github.com/themalikyusuf/nagios-ansible                     -----------role to install & configure nagios 
