@@ -1,0 +1,137 @@
+---
+- name: Install & Configure Nagios on a CentOS VM
+  hosts: vm-target
+  become: true
+
+  tasks:
+  
+  #Update yum cache to ensure that has the latest version of the software packages
+  - name: Update yum cache
+    yum:
+      name: '*'
+      state: latest
+    register: yum_output
+    #the yum_output indicate whether any packages were installed or updated
+
+  - name: Install required packages
+    yum:
+      name: 
+        - httpd
+        - php
+        - gcc
+        - glibc
+        - glibc-common
+        - gd
+        - gd-level
+        - make
+        - net-snmp
+        - openssl-devel
+        - wget
+        - unzip
+      state: latest
+    when: yum_output is changed    
+
+
+
+   - name: Create Nagios User & Group
+     group: 
+       name: Nagios_grp
+       state: present 
+     user:
+      name:  nagios
+      group: Nagios_grp
+      createhome: no
+      shell: /sbin/nologin
+      system: true 
+      # createhome: no (cad ne créer pas un repértoire home à l'user )   
+      #shell: /sbin/nologin (l'user nagios ne peut pas se connecter au système et ne peut être utilisé que pour exécuter le service Nagios.)
+
+
+   - name: Download Nagios Core
+     get_url:
+      url: https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.4.3.tar.gz 
+      dest: /tmp/nagioscore.tar.gz
+
+   - name: Extract Nagios Core
+     unarchive:
+      src: /tmp/nagioscore.tar.gz
+      dest: /tmp
+      remote_src: yes
+      # the line before indicate that the src file is in the control node 
+      creates: /tmp/nagioscore-nagios-4.4.6
+
+
+   - name: Configure Nagios Core
+     shell: |
+      cd /tmp/nagioscore-nagios-4.4.6 && \
+      ./configure --with-httpd-conf=/etc/httpd/conf.d
+     register: configure_output
+     # shell used to run shell cmds : cd change directory  and The configure script is a 
+     #script that is included with Nagios Core and is used to configure the software 
+     #before it is compiled and installed. The --with-httpd-conf option specifies the location of the Apache
+     # configuration file for Nagios
+
+
+  - name: Build and install Nagios Core
+    shell: |
+      cd /tmp/nagioscore-nagios-4.4.6 && \
+      make all && \
+      make install && \
+      make install-init && \
+      make install-commandmode && \
+      make install-config
+    when: configure_output is changed
+
+
+  - name: Verify Nagios Core installation
+    command: /usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+    register: nagios_output
+    failed_when: nagios_output.stderr != ''
+    #failed_when -->means the nagios_output.stderr will not be empty if there is an error
+    changed_when: nagios_output.stderr == ''
+    
+
+  - name: Enable and start the web server
+    systemd:
+    name: httpd
+    enabled: true
+    state: started
+
+
+   #Install Nagios Plugins 
+   - name: Download and install Nagios Plugins
+     get_url:
+      url: https://github.com/nagios-plugins/nagios-plugins/archive/release-2.3.3.tar.gz
+      dest: /tmp/nagios-plugins.tar.gz
+     register: nagios_plugins_output
+
+
+   - name: Extract Nagios Plugins
+     unarchive:
+      src: /tmp/nagios-plugins.tar.gz
+      dest: /tmp
+      remote_src: yes
+      creates: /tmp/nagios-plugins-release-2.3.3
+
+
+   - name: Configure Nagios Plugins
+     shell: |
+      cd /tmp/nagios-plugins-release-2.3.3 && \
+      ./configure --with-nagios-user=nagios --with-nagios-group=nagios
+     register: configure_plugins_output   
+
+   - name: Configure Nagios Plugins
+     shell: |
+      cd /tmp/nagios-plugins-release-2.3.3 && \
+      ./configure --with-nagios-user=nagios --with-nagios-group=Nagios_grp
+     register: configure_plugins_output
+
+
+
+   - name: Build and install Nagios Plugins 
+    shell: |
+      cd /tmp/nagios-plugins-release-2.3.3 && \
+      make && \
+      make install
+    when: configure_plugins_output is changed
+      
