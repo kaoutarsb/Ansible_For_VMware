@@ -33,11 +33,11 @@
 
 
 
-   - name: Create Nagios User & Group
-     group: 
+  - name: Create Nagios User & Group
+    group: 
        name: Nagios_grp
        state: present 
-     user:
+    user:
       name:  nagios
       group: Nagios_grp
       createhome: no
@@ -47,13 +47,13 @@
       #shell: /sbin/nologin (l'user nagios ne peut pas se connecter au système et ne peut être utilisé que pour exécuter le service Nagios.)
 
 
-   - name: Download Nagios Core
-     get_url:
+  - name: Download Nagios Core
+    get_url:
       url: https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.4.3.tar.gz 
       dest: /tmp/nagioscore.tar.gz
 
-   - name: Extract Nagios Core
-     unarchive:
+  - name: Extract Nagios Core
+    unarchive:
       src: /tmp/nagioscore.tar.gz
       dest: /tmp
       remote_src: yes
@@ -61,11 +61,11 @@
       creates: /tmp/nagioscore-nagios-4.4.6
 
 
-   - name: Configure Nagios Core
-     shell: |
+  - name: Configure Nagios Core
+    shell: |
       cd /tmp/nagioscore-nagios-4.4.6 && \
       ./configure --with-httpd-conf=/etc/httpd/conf.d
-     register: configure_output
+    register: configure_output
      # shell used to run shell cmds : cd change directory  and The configure script is a 
      #script that is included with Nagios Core and is used to configure the software 
      #before it is compiled and installed. The --with-httpd-conf option specifies the location of the Apache
@@ -99,39 +99,70 @@
 
 
    #Install Nagios Plugins 
-   - name: Download and install Nagios Plugins
-     get_url:
+  - name: Download and install Nagios Plugins
+    get_url:
       url: https://github.com/nagios-plugins/nagios-plugins/archive/release-2.3.3.tar.gz
       dest: /tmp/nagios-plugins.tar.gz
-     register: nagios_plugins_output
+    register: nagios_plugins_output
 
 
-   - name: Extract Nagios Plugins
-     unarchive:
+  - name: Extract Nagios Plugins
+    unarchive:
       src: /tmp/nagios-plugins.tar.gz
       dest: /tmp
       remote_src: yes
       creates: /tmp/nagios-plugins-release-2.3.3
 
 
-   - name: Configure Nagios Plugins
-     shell: |
+  - name: Configure Nagios Plugins
+    shell: |
       cd /tmp/nagios-plugins-release-2.3.3 && \
       ./configure --with-nagios-user=nagios --with-nagios-group=nagios
-     register: configure_plugins_output   
+    register: configure_plugins_output   
 
-   - name: Configure Nagios Plugins
-     shell: |
+  - name: Configure Nagios Plugins
+    shell: |
       cd /tmp/nagios-plugins-release-2.3.3 && \
       ./configure --with-nagios-user=nagios --with-nagios-group=Nagios_grp
-     register: configure_plugins_output
+    register: configure_plugins_output
 
 
-
-   - name: Build and install Nagios Plugins 
+    # |: pipe utilsé pour écrire des cmd dans multiple lines
+  - name: Build and install Nagios Plugins 
     shell: |
       cd /tmp/nagios-plugins-release-2.3.3 && \
       make && \
       make install
     when: configure_plugins_output is changed
+
+
+
+
+   #NEED TO CONTINUE INSTALLING & CONFIGURING NAGIOS CORE
+   # Verify if we need to add another step to install nagios core
+
+  - name: Start Nagios service
+    service:
+      name: nagios
+      state: restarted
+    become: true
+
+
+   #After the nagios core installation 
+
+  #-------------------Install vmware-tools if the os is linux or windows---------------------
+
+  #open-vm-tools: it's the open source implementation of VMware tools for Linux distribution
+  - name:  Install vm_tools for CentOs & RedHat
+    yum: name=open-vm-tools state=present
+    when: 
+       - ansible_distribution == "RedHat"
+       - ansible_distribution == "CentOS"
+
+  #The next task is for windows distribution 
+
+  #- name:  Install vm_tools for Windows    
+  #  win_chocolatey: name=vmware-tools state=present
+  #  when: ansible_distribution == "Windows"
+ 
       
