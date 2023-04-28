@@ -6,7 +6,8 @@
   #Next line include the file that contains the variables:
   pre_tasks:
      #vars.yml : file that includes all variables like vcenter_ip,vcenter_username
-   - include_vars: vars.yml
+   -  vars.yml
+   -  authentification-vmware.yml
   tasks:
    
   - name: create folder
@@ -43,7 +44,7 @@
              #VM name
              hostname: "{{ server }}"
              dns_servers:
-              - 192.168.1.2
+              - "{{ dns_server }}"
              domain: "domain_name"
              joindomain: "domain_name"
              domainadmin: "admin"
@@ -56,9 +57,10 @@
            memory_mb: "{{ memory_mb }}"
            num_cpus: "{{ num_cpus }}"
            #hotadd_cpu: ajouter cpu quand la VM est démarrée
-           hotadd_cpu: true
-           hotremove_cpu: true
-           hotadd_memory: false
+           hotadd_cpu: "{{ hot_add_cpu | default('True') }}"
+           hotremove_cpu: "{{ hot_remove_cpu | default('True') }}"
+           hotadd_memory:  "{{ hot_add_memory | default('False') }}"
+           
            #I added these lines
            cpu_limit : "{{ cpu_limit_inMHz }}"
            mem_limit: "{{ mem_limit_in_MB }}"
