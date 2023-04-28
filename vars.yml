@@ -6,6 +6,9 @@ cluster_name:
 server:
 memory_mb:
 num_cpus:
+hotadd_cpu: 
+hotremove_cpu:
+hotadd_memory:
 cpu_limit_inMHz:
 mem_limit_in_MB:
 network_name:
