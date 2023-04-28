@@ -8,7 +8,17 @@
      #vars.yml : file that includes all variables like vcenter_ip,vcenter_username
    - include_vars: vars.yml
   tasks:
-  
+   
+  - name: create folder
+    community.vmware.vcenter_folder:
+        hostname: "{{ vcenter_ip }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: no
+        datacenter_name: "{{ vcenter_datacenter }}"
+        folder_name: "{{ vcenter_destination_folder }}"
+        folder_type: vm
+        state: present
    #----------------Task1---------------------
     
   - name: Clone from template
@@ -20,9 +30,10 @@
          #next line we will turn off the ssl certifaction
          validate_certs: no
          #folder: dest folder,path to place datastore cluster in.the folder should include the datacenter
+         folder_name: "{{ vcenter_destination_folder }}"
          name: new_vm
          template: nom_du_modèle
-         datacenter: "{{ datacenter_nme }}"
+         datacenter: "{{ datacenter_name }}"
          cluster: "{{ cluster_name }}"
          #cluster :collection of datastores
          #customization : we use it for OS customization when we clone vm from template
@@ -55,9 +66,9 @@
           - name: "{{ network_name }}"
             type: static 
             ip: "{{ network_ip }}"
-            netmask: "{{ network_mask }}"
             gateway: "{{ network_gateway }}"
-            domain:  "{{ domain_name }}"
+            netmask: "{{ network_mask }}"
+            domain:  "domain_name"
             dns_servers:
               - 192.168.1.2
               #the next line means: Wait until vCenter detects an IP address for the virtual machine
@@ -70,7 +81,7 @@
        hostname: "{{ vcenter_ip}}"
        username: "{{ vcenter_username }}"
        password: "{{ vcenter_password }}"
-       datacenter: "{{ datacenter_nme }}"
+       datacenter: "{{ datacenter_name }}"
        validate_certs: no
        name: "{{ server | upper}}"
        disk: 
@@ -85,11 +96,10 @@
          scsi_type: "{{ vm_disk_scsi_type }}"
     #delegate_to : pour spécifier dans quel machine il faut executer "the task"     
     delegate_to: localhost 
-    #Register infos of disks
+    #Register infos of the disk
     register: disk_facts
     
- # - name: add the VM to the Inventory file
- # i want to integrate excel with ansible (en utilisant les variables qui se trouve dans un 
+ 
   
     
     
