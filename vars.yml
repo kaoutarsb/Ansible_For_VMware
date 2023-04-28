@@ -15,6 +15,7 @@ network_name:
 network_ip:
 network_mask:
 network_gateway:
+dns_server:
 disk_size:
 vm_disk_type:
 vm_disk_scsi_controller:
