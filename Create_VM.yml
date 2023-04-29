@@ -101,6 +101,16 @@
     #Register infos of the disk
     register: disk_facts
     
+    
+    #After finishing the creation of the vm we need to power on the vm to install vm-tools
+    - name: Power on new VM
+      vmware_guest_powerstate:
+        hostname: "{{ vcenter_ip }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: False
+        name: "{{ server }}"
+        state: powered_on
  
   
     
