@@ -102,19 +102,73 @@
     register: disk_facts
     
     
-    #After finishing the creation of the vm we need to power on the vm to install vm-tools
-    - name: Power on new VM
-      vmware_guest_powerstate:
-        hostname: "{{ vcenter_ip }}"
-        username: "{{ vcenter_username }}"
-        password: "{{ vcenter_password }}"
-        validate_certs: False
-        name: "{{ server }}"
-        state: powered_on
     
-    #Installing vmware tools for Windows Server
-    - name: 
-  
+    #After finishing the creation of the vm we need to power on the vm to install vm-tools
+    
+  - name: Power on new VM
+    vmware_guest_powerstate:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: False
+    name: "{{ server }}"
+    state: powered_on
+    
+    
+    
+    
+    #------------------Installing vmware tools for Windows Server-------------
+    #1st: To install vmware tools we need first to copy the iso file and paste it in the destination wanted
+    #2nd: We need to mount vmware tools iso image 
+  - name: Install vmware tools
+    block:
+       - name: copy vmware tools to temp directory
+         win_get_url:
+           url: '{{ vmware_tools_download_url }}'
+           dest: '{{ temp_directory  }}'
+         register: download_vmwaretools
+         until: download_vmwaretools is success
+         delay: 5
+         retries: 5
+      
+        #
+       - name: install vmware tools
+         win_package:
+            path: '{{ download_vmware_tools.dest }}'
+            arguments: /s /v "/qn reboot=r"
+            state: present
+         register: vmware_tools_install
+          
+    rescue:
+      - block:
+        - name: fail if vmware tools is not downloaded
+          fail:
+            msg: "no local copy of vmware tools"
+          when: download_vmware_tools is not success
+    
+    
+        - name: install vmware tools using win_shell module
+           #win-shell to execute a command
+          win_shell: '{{ download_vmware_tools.dest }} /s /v "/qn reboot=r"'
+          when: download_vmware_tools is success
+
+          #This win_stat: Obtain the info about a file    //It will returns true if it's installed
+        - name: check to see vmware tools is installed
+          win_stat:
+            path: 'C:\Program Files\VMware\VMware Tools\vmtoolsd.exe'
+          register: check_vmware_tools_installation
+          
+        - name: fail if not installed
+          fail:
+            msg: "vmware tools is not installed.."
+          when: not (check_vmware_tools_installation.stat.exists | default(true))
+       
+        rescue:
+          - name:  Install vm_tools for Windows    
+            win_chocolatey: name=vmware-tools state=present
+            when: ansible_distribution == "Windows"
+ 
+   
     
     
             
