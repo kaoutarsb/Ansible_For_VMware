@@ -111,7 +111,9 @@
         validate_certs: False
         name: "{{ server }}"
         state: powered_on
- 
+    
+    #Installing vmware tools for Windows Server
+    - name: 
   
     
     
