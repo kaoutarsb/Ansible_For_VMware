@@ -33,7 +33,7 @@
          validate_certs: no
          #folder: dest folder,path to place datastore cluster in.the folder should include the datacenter
          folder_name: "{{ vcenter_destination_folder }}"
-         name: new_vm
+         name: '{{ new_vm }}'
          template: nom_du_modèle
          datacenter: "{{ datacenter_name }}"
          cluster: "{{ cluster_name }}"
@@ -41,7 +41,7 @@
          #customization : we use it for OS customization when we clone vm from template
          #The customization is related to vCenter version 
          customization:
-             autologon: true 
+            # autologon: true 
              #VM name
              hostname: "{{ server }}"
              dns_servers:
