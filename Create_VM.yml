@@ -5,8 +5,9 @@
   gather_facts: no
   #Next line include the file that contains the variables:
   pre_tasks:
-     #vars.yml : file that includes all variables like vcenter_ip,vcenter_username
+     #vars.yml : file that includes all variables 
    -  vars.yml
+     #the 2nd file : includes authentication variables
    -  authentification-vmware.yml
   tasks:
    
