@@ -51,8 +51,7 @@
              domainadmin: "admin"
              domainadminpassword: "admin"
              #runonce: list of cmds to run at first user logon(specific to windows customization) et il est utilisé pour executer une tache une seule fois 
-             runonce:
-             # I don't know what to add here 
+            
          wait_for_customization: yes 
          hardware: 
            memory_mb: "{{ memory_mb }}"
