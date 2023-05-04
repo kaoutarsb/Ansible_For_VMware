@@ -73,7 +73,7 @@
             domain:  "domain_name"
             dns_servers:
               - "{{ dns_server }}"
-              #the next line means: Wait until vCenter detects an IP address for the virtual machine
+              #the next line means: Wait until vCenter detects an IP address for the virtual machine (wait until the vm into the OS & an ip @ has been assigned to the given NIC)
          wait_for_ip_address: true 
          
    #----------------Task2---------------------    
