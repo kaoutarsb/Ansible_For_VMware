@@ -4,10 +4,10 @@
   #We do not necessarily need to collect facts about our localhost so gather_facts=false
   gather_facts: no
   #Next line include the file that contains the variables:
-  pre_tasks:
+  var_files:
      #vars.yml : file that includes all variables 
    -  vars.yml
-     #the 2nd file : includes authentication variables
+     #the 2nd file : includes authentication variables (vcenter_ip,vcenter_username,vcenter_password)
    -  authentification-vmware.yml
   tasks:
    
