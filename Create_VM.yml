@@ -165,7 +165,8 @@
           when: not (check_vmware_tools_installation.stat.exists | default(true))
        
         rescue:
-          - name:  Install vm_tools for Windows    
+          - name:  Install vm_tools for Windows 
+            #If Chocolatey is missing from the system, the module will install it.
             win_chocolatey: name=vmware-tools state=present
             when: ansible_distribution == "Windows"
  
