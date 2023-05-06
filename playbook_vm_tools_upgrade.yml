@@ -11,7 +11,11 @@
       username: "{{ vcenter_username }}"
       password: "{{ vcenter_password }}"
       datacenter: "{{ datacenter_name }}"
-      name: "{{ vm_name }}"
+      name: "{{ item }}"
+      #add name of vms 
+    with_list: 
+         - 
+         -
     delegate_to: localhost
     #we register the info on the variable vmtools_info
     register: vmtools_info
@@ -23,5 +27,8 @@
       username: "{{ vcenter_username }}"
       password: "{{ vcenter_password }}"
       datacenter: "{{ datacenter_name }}"
-      name: "{{ vm_name }}"
+      name: "{{ item }}"
+    with_list:
+       -
+       -
     delegate_to: localhost
