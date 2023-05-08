@@ -1,5 +1,5 @@
 ---
-- name: Windows Updates
+- name: Windows Patching Playbook
   hosts: all 
   tasks: 
   - name: install Updates
@@ -13,6 +13,7 @@
        accept_list:
           - KB123345
           - KB579867
+       # for state we can just search updates needed by using state: searched   
        state: installed
        reboot: true  
        #role de log_path: win_updates ajoutera les progressions des MAJ au fichier spécifié
