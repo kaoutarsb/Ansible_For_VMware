@@ -1,0 +1,46 @@
+---
+- name: Gather info of the vm created
+  hosts: 
+  gather_fatcs: true
+  vars_files:
+    - file_authentication.yml
+  vars: 
+     vm_name: "my_vm_name"
+     csv_file: "path_to_mycsv_file"
+  tasks:
+   - name: VM facts
+      vmware_guest_info:
+        hostname: "{{ vcenter_ip }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: no
+        name: "{{ vm_name }}"
+      register: vm_facts
+      
+      # Now to use csv module we need to install it using cmd "ansible-galaxy collection install community.general"
+   - name: Save vm_facts to csv_file
+     csv:
+       path: "{{ csv_file }}"
+       mode: write
+       delimiter: ","
+       header_row: true
+       content:
+         - {"VM Name": "{{ vm_facts.guest_name }}", "CPU Count": "{{ vm_facts.num_cpu }}", "Memory Size": "{{ vm_facts.memory_mb }} MB", "Network Adapter": "{{ vm_facts.nic_info.0.network }}", "Domain": "{{ vm_facts.domain }}", "IP Address": "{{ vm_facts.ip_address }}", "Power State": "{{ vm_facts.power_state }}"}
+   
+    # send CSV file Task
+   - name: Send csv File
+     mail:
+       host: smtp_server
+       port: "25_by_default"
+       #If SMTP requires username &password
+       username: "the_username"
+       password:  "the_passwd"
+       to: "the_mail_address"
+       subject: Gather info of the  new vm created
+       body: "You will find here  the VM configuration report"
+       attach:
+         - "{{ csv_file }}"
+       
+       
+       
+       
