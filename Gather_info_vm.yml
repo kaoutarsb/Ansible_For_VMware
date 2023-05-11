@@ -25,7 +25,7 @@
        delimiter: ","
        header_row: true
        content:
-         - {"VM Name": "{{ vm_facts.guest_name }}", "CPU Count": "{{ vm_facts.num_cpu }}", "Memory Size": "{{ vm_facts.memory_mb }} MB", "Network Adapter": "{{ vm_facts.nic_info.0.network }}", "Domain": "{{ vm_facts.domain }}", "IP Address": "{{ vm_facts.ip_address }}", "Power State": "{{ vm_facts.power_state }}"}
+         - {"VM Name": "{{ vm_facts.guest_name }}", "CPU ": "{{ vm_facts.num_cpu }}", "Memory Size": "{{ vm_facts.memory_mb }} MB", "Network Adapter": "{{ vm_facts.nic_info.0.network }}", "Domain": "{{ vm_facts.domain }}", "IP Address": "{{ vm_facts.ip_address }}", "Power_State": "{{ vm_facts.power_state }}"}
    
     # send CSV file Task
    - name: Send csv File
