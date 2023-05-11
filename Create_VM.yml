@@ -85,7 +85,7 @@
        password: "{{ vcenter_password }}"
        datacenter: "{{ datacenter_name }}"
        validate_certs: no
-       name: "{{ server | upper}}"
+       name: "{{ server }}"
        disk: 
         -size_gb:  "{{ disk_size }}"
          #number of scsi bus (or scsi_controller)
