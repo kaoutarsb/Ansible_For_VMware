@@ -1,0 +1,63 @@
+---
+- name: Gather info of the vm created
+  hosts: 
+  gather_fatcs: no
+  vars_files:
+    - file_authentication.yml
+  vars: 
+     vm_name: "my_vm_name"
+     csv_path:  "csv_path"
+     csv_filename: report.csv
+     headers: VM_name,CPU,Memory_size,Network_Adapter,Domain,IP_address,Powerstate
+     
+  
+  tasks:
+   - name: VM facts
+     vmware_guest_info:
+        hostname: "{{ vcenter_ip }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: no
+        name: "{{ vm_name }}"
+     register: vm_facts
+     
+   - name: Save CSV headers
+     lineinfile:
+       dest: "{{ csv_path }}/{{ csv_filename }}"
+       line: "{{ headers }}"
+       create: true
+       state: present
+     delegate_to: localhost
+     run_once: true
+     
+     
+   - name: Build out CSV file
+     lineinfile:
+       dest: "{{ csv_path }}/{{ csv_filename }}"
+       line: "{{ vm_facts.guest_name }},{{ vm_facts.num_cpu }},{{ vm_facts.memory_mb }},{{ vm_facts.nic_info.0.network }},{{ vm_facts.domain }},{{ vm_facts.ip_address }}, {{ vm_facts.power_state }}"
+       create: true
+       state: present
+     delegate_to: localhost
+     
+     
+   - name: Read in CSV to variable
+     read_csv:
+       path: "{{ csv_path }}/{{ csv_filename }}"
+     register: csv_file
+     delegate_to: localhost
+     run_once: true
+     
+     
+      # send CSV file Task
+   - name: Send csv File
+     mail:
+       host: smtp_server
+       port: 25
+       #If SMTP requires username &password
+       #username: "the_username"
+       #password:  "the_passwd"
+       to: "email_to"
+       subject: New VM Report
+       body: "You will find here  the VM configuration report"
+       attach: "{{ csv_path }}/{{ csv_filename }}"
+       
