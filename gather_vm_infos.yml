@@ -58,6 +58,6 @@
        #password:  "the_passwd"
        to: "email_to"
        subject: New VM Report
-       body: "You will find here  the VM configuration report"
+       body: "The VM Report"
        attach: "{{ csv_path }}/{{ csv_filename }}"
        
