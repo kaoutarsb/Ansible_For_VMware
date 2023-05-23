@@ -1,7 +1,7 @@
 ---
 - name: Gather info of the vm created
   hosts: 
-  gather_fatcs: true
+  gather_facts: true
   vars_files:
     - file_authentication.yml
   vars: 
