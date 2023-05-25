@@ -61,7 +61,7 @@
            hotremove_cpu: "{{ hot_remove_cpu | default('True') }}"
            hotadd_memory:  "{{ hot_add_memory | default('False') }}"
            
-           #I added these lines
+           #I added these lines (after testing these lines i dosen't work)
            cpu_limit : "{{ cpu_limit_inMHz }}"
            mem_limit: "{{ mem_limit_in_MB }}"
          networks:
@@ -119,7 +119,7 @@
     
     #------------------Installing vmware tools for Windows Server-------------
     #1st: To install vmware tools we need first to copy the iso file and paste it in the destination wanted
-    #2nd: We need to mount vmware tools iso image 
+    
   - name: Install vmware tools
     block:
        - name: copy vmware tools to temp directory
