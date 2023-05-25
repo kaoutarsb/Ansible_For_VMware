@@ -10,7 +10,7 @@
      #the 2nd file : includes authentication variables (vcenter_ip,vcenter_username,vcenter_password)
    -  authentification-vmware.yml
   tasks:
-   
+   #we elimanited this task after the test
   - name: create folder
     community.vmware.vcenter_folder:
         hostname: "{{ vcenter_ip }}"
