@@ -1,0 +1,66 @@
+---
+- name: Create a virtual machine from a template
+  hosts: localhost
+  become: yes
+  gather_facts: no
+  vars_files:
+    - vmware_auth.yml
+  tasks:
+    - name: load variable for Primary site
+      include_vars: /etc/ansible/group_vars/PrimarySite
+      when: site == "PrimarySite"
+    - name: load variable for secondary Site
+      include_vars: /etc/ansible/group_vars/SecondarySite
+      when: site == "SecondarySite"
+
+ 
+
+
+    - name: clone Vm from Template
+      vmware_guest:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: no
+        folder: "/{{ datacenter_name }}/vm/VMs Linux"
+        name: "{{ server |upper }}"
+        state: poweredon
+        datacenter: "{{ datacenter_name }}"
+        cluster: "{{ cluster_name }}"
+        template: Template_Linux_7.9
+        customization:
+          hostname: "{{ server }}"
+        hardware:
+          memory_mb: "{{ memory_mb }}"
+          num_cpus: "{{ num_cpus }}"
+          hotadd_cpu: True
+          hotremove_cpu: True
+          hotadd_memory: True
+        networks:
+          - name: "{{ network_name }}"
+            ip: "{{ network_ip }}"
+            netmask: "{{ network_mask }}"
+            gateway: "{{ network_gw }}"
+        wait_for_ip_address: no
+      delegate_to: localhost
+      register: deploy
+    - name: add another disk if needed
+      block:
+        - name: Add disks to virtual machine {{ server | upper }}
+          vmware_guest_disk:
+            hostname: "{{ vcenter_hostname }}"
+            username: "{{ vcenter_username }}"
+            password: "{{ vcenter_password }}"
+            datacenter: "{{ datacenter_name }}"
+            validate_certs: no
+            name: "{{ server |upper }}"
+            disk:
+              - size_gb: "{{ disk_size }}"
+                type: "{{ disk_type }}"
+                datastore: "{{ datastore_name }}"
+                scsi_controller: 0
+                unit_number: 1
+                state: present
+          delegate_to: localhost
+          register: disk_facts
+      when: disk_sdb == "yes"
